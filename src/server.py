@@ -1,29 +1,36 @@
 import socket
 
+# Configuração do servidor
+HOST = "0.0.0.0"  # Aceita conexões de qualquer IP
+PORT = 7720        # Porta usada para comunicação
 
-HOST = "0.0.0.0"
-PORT = "772023"
-
+# Criando o socket TCP
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST, PORT))
-server.listen(1)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Permite reuso da porta
 
-print(f"Servidor está aguardando conexões na porta {PORT}")
+server.bind((HOST, PORT))  # Associa o socket ao endereço e porta
+server.listen(1)  # Aguarda conexões
 
-conn, addr = server.accept()
+print(f"Servidor aguardando conexões na porta {PORT}...")
+
+conn, addr = server.accept()  # Aceita a conexão
 print(f"Conectado a {addr}")
 
+# Troca de mensagens
 while True:
+    # Recebe mensagem do cliente
+    mensagem_cliente = conn.recv(1024).decode('utf-8')
+    if mensagem_cliente.lower() == 'sair':
+        print("Cliente desconectado.")
+        break
+    print(f"Cliente: {mensagem_cliente}")
 
-    mensagem = conn.recv(1024).decode()
-
-    if not mensagem:
+    # Envia mensagem para o cliente
+    mensagem_servidor = input("Digite sua mensagem: ")
+    conn.sendall(mensagem_servidor.encode('utf-8'))
+    if mensagem_servidor.lower() == 'sair':
+        print("Desconectando...")
         break
 
-    print(f"Cliente: {mensagem}")
-
-    resposta = input("Servidor: ")
-    conn.send(resposta.encode())
-
-    conn.close()
-    server.close()
+# Fecha a conexão
+conn.close()

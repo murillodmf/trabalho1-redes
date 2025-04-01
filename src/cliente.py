@@ -1,23 +1,27 @@
 import socket
 
-HOST = input("Digite o IP do servidor: ")
-PORT = int(input("Digite a porta: "))
+# Configuração do cliente
+HOST = input("Digite o IP do servidor: ")  # IP do servidor
+PORT = 7720  # Porta usada para comunicação
 
-
+# Criando o socket TCP
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# Conectando ao servidor
 client.connect((HOST, PORT))
 
-print("Conectado ao servidor. Digite 'sair' para encerrar.")
-
+# Troca de mensagens
 while True:
-
-    mensagem = input("Cliente: ")
-    client.send(mensagem.encode())
-
-    if mensagem.lower() == "sair":
+    # Envia mensagem para o servidor
+    mensagem_cliente = input("Digite sua mensagem: ")
+    client.sendall(mensagem_cliente.encode('utf-8'))
+    if mensagem_cliente.lower() == 'sair':
+        print("Desconectando...")
         break
 
-    resposta = client.recv(1024).decode()
-    print(f"Servidor: {resposta}")
+    # Recebe resposta do servidor
+    mensagem_servidor = client.recv(1024).decode('utf-8')
+    print(f"Servidor: {mensagem_servidor}")
 
+# Fecha a conexão
 client.close()
