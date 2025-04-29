@@ -25,7 +25,7 @@ Este repositório contém o código e a documentação do Trabalho 1 da discipli
     ```
 3. Execute o programa principal:
     ```bash
-    python src/main.py
+    Aqui, será necesário duas máquinas, cada uma deve rodar o arquivo e seguir com Listen e Conexão
     ```
 
 ### Licença
